@@ -7,6 +7,13 @@
     "preact/": "https://esm.sh/preact@10.11.0/",
     "twind": "https://esm.sh/twind@0.16.17",
     "twind/": "https://esm.sh/twind@0.16.17/",
+    "preact-render-to-string": "https://esm.sh/v104/*preact-render-to-string@5.2.6",
+    "preact-render-to-string/": "https://esm.sh/v104/*preact-render-to-string@5.2.6/",
     "selenium-webdriver": "https://esm.sh/v104/*selenium-webdriver@4.8.0"
+  },
+  "scopes": {
+    "https://esm.sh/v104/": {
+      "pretty-format": "https://esm.sh/v104/pretty-format@3.8.0"
+    }
   }
 }
