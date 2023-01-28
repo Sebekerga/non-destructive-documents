@@ -18,5 +18,13 @@ export const handler: Handlers = {
 interface DocumentRawProps {
   pages: Array<Element>;
 }
-const DocumentRaw = (props: PageProps<DocumentRawProps>) => props.data.pages;
+const DocumentRaw = (props: PageProps<DocumentRawProps>) => (
+  <>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@300&display=swap"
+      rel="stylesheet"
+    />
+    props.data.pages
+  </>
+);
 export default DocumentRaw;
