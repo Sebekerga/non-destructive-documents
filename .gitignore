@@ -1,2 +1,3 @@
 deno.lock
-static/radix_icons
+documents
+documents.gen.ts

@@ -3,19 +3,19 @@
 // This file is automatically updated during development when running `dev.ts`.
 
 import config from "./deno.json" assert { type: "json" };
-import * as $0 from "./routes/[document]/index.tsx";
-import * as $1 from "./routes/[document]/raw/[page].tsx";
-import * as $2 from "./routes/[document]/raw/index.tsx";
-import * as $3 from "./routes/api/pdf.ts";
+import * as $0 from "./routes/api/pdf.ts";
+import * as $1 from "./routes/documents/[...document]/index.tsx";
+import * as $2 from "./routes/documents/raw/[...document]/[page].tsx";
+import * as $3 from "./routes/documents/raw/[...document]/index.tsx";
 import * as $4 from "./routes/index.tsx";
 import * as $$0 from "./islands/DocumentPreviewHandler.tsx";
 
 const manifest = {
   routes: {
-    "./routes/[document]/index.tsx": $0,
-    "./routes/[document]/raw/[page].tsx": $1,
-    "./routes/[document]/raw/index.tsx": $2,
-    "./routes/api/pdf.ts": $3,
+    "./routes/api/pdf.ts": $0,
+    "./routes/documents/[...document]/index.tsx": $1,
+    "./routes/documents/raw/[...document]/[page].tsx": $2,
+    "./routes/documents/raw/[...document]/index.tsx": $3,
     "./routes/index.tsx": $4,
   },
   islands: {
