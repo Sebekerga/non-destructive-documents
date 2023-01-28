@@ -1,10 +1,13 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 import puppeteer from "https://deno.land/x/puppeteer@16.2.0/mod.ts";
+import manifest from "../../../documents.gen.ts";
+import { parse } from "deno/std/node/url.ts";
+import { join } from "deno/std/path/posix.ts";
+
+import { DocumentDescription } from "../../../utils/documents.ts";
 
 import DocumentPreviewHandler from "../../../islands/DocumentPreviewHandler.tsx";
 import DocumentPreviewContainer from "../../../components/DocumentPreviewContainer.tsx";
-import { DocumentDescription } from "../../../utils/documents.ts";
-import manifest from "../../../documents.gen.ts";
 
 export const handler: Handlers = {
   GET: async (req, ctx) => {
@@ -16,29 +19,50 @@ export const handler: Handlers = {
       return new Response("No such document", { status: 404 });
     }
 
-    // rendering page
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.goto(`http://localhost:8000/raw/${document_name}`, {
-      waitUntil: "networkidle2",
-    });
+    const parsed_url = parse(req.url, true, true);
+    const host_full_url = `${parsed_url.protocol}//${parsed_url.host}`;
+    const raw_document_preview = join(host_full_url, "documents/raw", document_name);
 
-    // saving to a temp file
-    const page_temp_file = await Deno.makeTempFile({
-      prefix: "documents_render_",
-      suffix: ".pdf",
-    });
-    await page.pdf({ path: page_temp_file, height: "297mm", width: "210mm", printBackground: true });
+    try {
+      // rendering page
+      const browser = await puppeteer.launch();
+      const page = await browser.newPage();
+      await page.goto(raw_document_preview, {
+        waitUntil: "networkidle2",
+      });
 
-    console.log("temp path", page_temp_file);
-    await browser.close();
+      // saving to a temp file
+      const page_temp_file = await Deno.makeTempFile({
+        prefix: "documents_render_",
+        suffix: ".pdf",
+      });
+      const pdf_file = await page.pdf({
+        path: page_temp_file,
+        height: "297mm",
+        width: "210mm",
+        printBackground: true,
+      });
+      await browser.close();
+    } catch {
+      console.warn("It seems like it's not possible to save pdf file locally");
+      return await ctx.render({
+        document_description,
+        disable_pdf: true,
+      } as DocumentPreviewProps);
+    }
 
-    return await ctx.render(document_description);
+    return await ctx.render({
+      document_description,
+    } as DocumentPreviewProps);
   },
 };
 
-const DocumentPreview = (props: PageProps<DocumentDescription>) => {
-  const { pages, ...document_data } = props.data;
+interface DocumentPreviewProps {
+  document_description: DocumentDescription;
+  disable_pdf?: boolean;
+}
+const DocumentPreview = (props: PageProps<DocumentPreviewProps>) => {
+  const { pages, ...document_data } = props.data.document_description;
 
   return (
     <>
@@ -51,9 +75,10 @@ const DocumentPreview = (props: PageProps<DocumentDescription>) => {
         <body>
           <DocumentPreviewHandler
             {...document_data}
+            disable_pdf={props.data.disable_pdf}
           />
           <DocumentPreviewContainer {...document_data}>
-            {props.data.pages}
+            {props.data.document_description.pages}
           </DocumentPreviewContainer>
         </body>
       </html>

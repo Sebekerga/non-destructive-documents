@@ -4,6 +4,7 @@ interface DocumentPreviewHandlerProps {
   label: string;
   document_id: string;
   filename: string;
+  disable_pdf?: boolean;
 }
 const DocumentPreviewHandler = (props: DocumentPreviewHandlerProps) => {
   useEffect(() => {
@@ -49,11 +50,12 @@ const DocumentPreviewHandler = (props: DocumentPreviewHandlerProps) => {
       <header class="bg-gradient-to-bl from-blue-50 to-blue-300 py-3 px-8 sticky top-0 z-10 flex shadow-2xl">
         <div class="flex-1"></div>
         <span class="text-4xl text-black hover:-translate-y-0.5 transition-transform">{props.label}</span>
-        <div class="flex-1 flex">
+        <div class="flex-1 flex items-center">
           <div class="flex-1"></div>
           <button
-            class="group text-black text-2xl underline hover:text-blue-700 w-[fit-content] inline-flex"
+            class="group text-black text-2xl underline hover:text-blue-700 w-[fit-content] inline-flex disabled:text-gray-600"
             onClick={saveAsPDF}
+            disabled={props.disable_pdf}
           >
             <svg
               class="h-6 w-6 m-1"
@@ -66,14 +68,14 @@ const DocumentPreviewHandler = (props: DocumentPreviewHandlerProps) => {
               <path
                 fill-rule="evenodd"
                 clip-rule="evenodd"
-                class="group-hover:translate-y-[0] -translate-y-[0.9rem] transition-transform"
+                class="group-enabled:group-hover:translate-y-[0] -translate-y-[0.9rem] transition-transform"
                 d="M7.50005 1.04999C7.74858 1.04999 7.95005 1.25146 7.95005 1.49999V8.41359L10.1819 6.18179C10.3576 6.00605 10.6425 6.00605 10.8182 6.18179C10.994 6.35753 10.994 6.64245 10.8182 6.81819L7.81825 9.81819C7.64251 9.99392 7.35759 9.99392 7.18185 9.81819L4.18185 6.81819C4.00611 6.64245 4.00611 6.35753 4.18185 6.18179C4.35759 6.00605 4.64251 6.00605 4.81825 6.18179L7.05005 8.41359V1.49999C7.05005 1.25146 7.25152 1.04999 7.50005 1.04999Z"
                 fill="currentColor"
               />
               <path
                 fill-rule="evenodd"
                 clip-rule="evenodd"
-                class="group-hover:translate-y-[0.9rem] group-hover:opacity-0 group-hover:scale-y-0 transition-all"
+                class="group-enabled:group-hover:translate-y-[0.9rem] group-enabled:group-hover:opacity-0 group-enabled:group-hover:scale-y-0 transition-all"
                 d="M7.50005 1.04999C7.74858 1.04999 7.95005 1.25146 7.95005 1.49999V8.41359L10.1819 6.18179C10.3576 6.00605 10.6425 6.00605 10.8182 6.18179C10.994 6.35753 10.994 6.64245 10.8182 6.81819L7.81825 9.81819C7.64251 9.99392 7.35759 9.99392 7.18185 9.81819L4.18185 6.81819C4.00611 6.64245 4.00611 6.35753 4.18185 6.18179C4.35759 6.00605 4.64251 6.00605 4.81825 6.18179L7.05005 8.41359V1.49999C7.05005 1.25146 7.25152 1.04999 7.50005 1.04999Z"
                 fill="currentColor"
               />
