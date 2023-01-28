@@ -1,5 +1,4 @@
 import { encode } from "deno/std/encoding/base64.ts";
-import { readAll } from "deno/std/io/util.ts";
 
 import { join, toFileUrl } from "deno/std/path/mod.ts";
 import { walk } from "deno/std/fs/walk.ts";
@@ -13,8 +12,8 @@ interface DocumentDescription {
 }
 
 const fileToBase64 = async (file_path: string) => {
-  const file = await Deno.open(file_path);
-  const encoded = encode(await readAll(file));
+  const file = await Deno.readTextFile(file_path);
+  const encoded = encode(file);
 
   return encoded;
 };
