@@ -1,10 +1,11 @@
+import puppeteer from "puppeteer";
 import { Handlers, PageProps } from "$fresh/server.ts";
-import puppeteer from "https://deno.land/x/puppeteer@16.2.0/mod.ts";
-import manifest from "../../../documents.gen.ts";
 import { parse } from "deno/std/node/url.ts";
 import { join } from "deno/std/path/posix.ts";
+import { encode } from "deno/std/encoding/base64.ts";
 
 import { DocumentDescription } from "../../../utils/documents.ts";
+import manifest from "../../../documents.gen.ts";
 
 import DocumentPreviewHandler from "../../../islands/DocumentPreviewHandler.tsx";
 import DocumentPreviewContainer from "../../../components/DocumentPreviewContainer.tsx";
@@ -36,30 +37,36 @@ export const handler: Handlers = {
         prefix: "documents_render_",
         suffix: ".pdf",
       });
-      const pdf_file = await page.pdf({
+      await page.pdf({
         path: page_temp_file,
         height: "297mm",
         width: "210mm",
         printBackground: true,
       });
       await browser.close();
+
+      const file = await Deno.readFile(page_temp_file);
+      const encoded = encode(file);
+
+      console.log(`Returning document "${document_name}", from ${page_temp_file}`);
+      return await ctx.render({
+        document_description,
+        pdf: encoded,
+      } as DocumentPreviewProps);
     } catch {
-      console.warn("It seems like it's not possible to save pdf file locally");
+      console.warn(`Returning document "${document_name}", without PDF`);
       return await ctx.render({
         document_description,
         disable_pdf: true,
       } as DocumentPreviewProps);
     }
-
-    return await ctx.render({
-      document_description,
-    } as DocumentPreviewProps);
   },
 };
 
 interface DocumentPreviewProps {
   document_description: DocumentDescription;
   disable_pdf?: boolean;
+  pdf?: string;
 }
 const DocumentPreview = (props: PageProps<DocumentPreviewProps>) => {
   const { pages, ...document_data } = props.data.document_description;
@@ -76,6 +83,7 @@ const DocumentPreview = (props: PageProps<DocumentPreviewProps>) => {
           <DocumentPreviewHandler
             {...document_data}
             disable_pdf={props.data.disable_pdf}
+            pdf={props.data.pdf}
           />
           <DocumentPreviewContainer {...document_data}>
             {props.data.document_description.pages}

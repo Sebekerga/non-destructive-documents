@@ -4,7 +4,6 @@ import manifest from "../../../../documents.gen.ts";
 export const handler: Handlers = {
   GET: async (req, ctx) => {
     const document_name = ctx.params.document;
-    console.log(req);
     const document_description = manifest.find((document) => document.document_id === document_name);
 
     if (!document_description) {
@@ -24,7 +23,7 @@ const DocumentRaw = (props: PageProps<DocumentRawProps>) => (
       href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@300&display=swap"
       rel="stylesheet"
     />
-    props.data.pages
+    {props.data.pages}
   </>
 );
 export default DocumentRaw;

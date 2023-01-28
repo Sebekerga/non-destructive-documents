@@ -1,10 +1,12 @@
 import { useEffect } from "preact/hooks";
+import downloadjs from "downloadjs";
 
 interface DocumentPreviewHandlerProps {
   label: string;
   document_id: string;
   filename: string;
   disable_pdf?: boolean;
+  pdf?: string;
 }
 const DocumentPreviewHandler = (props: DocumentPreviewHandlerProps) => {
   useEffect(() => {
@@ -37,8 +39,11 @@ const DocumentPreviewHandler = (props: DocumentPreviewHandlerProps) => {
     return () => self.removeEventListener("resize", fitDocumentToDevice);
   }, []);
 
-  const saveAsPDF = async () => {
-    await console.log("saving pdf");
+  const saveAsPDF = () => {
+    console.log("saving pdf", props.pdf);
+
+    props.pdf &&
+      downloadjs(`data:application/pdf;base64,${props.pdf}`, `${props.filename}.pdf`, "application/pdf");
   };
 
   return (
