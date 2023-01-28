@@ -5,18 +5,16 @@
 import config from "./deno.json" assert { type: "json" };
 import * as $0 from "./routes/api/pdf.ts";
 import * as $1 from "./routes/documents/[...document]/index.tsx";
-import * as $2 from "./routes/documents/raw/[...document]/[page].tsx";
-import * as $3 from "./routes/documents/raw/[...document]/index.tsx";
-import * as $4 from "./routes/index.tsx";
+import * as $2 from "./routes/documents/raw/[...document]/index.tsx";
+import * as $3 from "./routes/index.tsx";
 import * as $$0 from "./islands/DocumentPreviewHandler.tsx";
 
 const manifest = {
   routes: {
     "./routes/api/pdf.ts": $0,
     "./routes/documents/[...document]/index.tsx": $1,
-    "./routes/documents/raw/[...document]/[page].tsx": $2,
-    "./routes/documents/raw/[...document]/index.tsx": $3,
-    "./routes/index.tsx": $4,
+    "./routes/documents/raw/[...document]/index.tsx": $2,
+    "./routes/index.tsx": $3,
   },
   islands: {
     "./islands/DocumentPreviewHandler.tsx": $$0,
