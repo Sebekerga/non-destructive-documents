@@ -121,7 +121,7 @@ const document_description: DocumentDescription = {
   document_id: "resume",
   filename: "deno_resume",
   pages: [
-    <DenoResumePage color="lightgreen" />, // deno resume for sharing online
+    <DenoResumePage color="yellow" />, // deno resume for sharing online
     <DenoResumePage color="gray" />, // deno resume for printing
   ],
 };
