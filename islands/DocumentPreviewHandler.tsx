@@ -42,6 +42,10 @@ const DocumentPreviewHandler = (props: DocumentPreviewHandlerProps) => {
 
   return (
     <>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@300&display=swap"
+        rel="stylesheet"
+      />
       <header class="bg-gradient-to-bl from-blue-50 to-blue-300 py-3 px-8 sticky top-0 z-10 flex shadow-2xl">
         <div class="flex-1"></div>
         <span class="text-4xl text-black hover:-translate-y-0.5 transition-transform">{props.label}</span>

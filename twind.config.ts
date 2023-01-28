@@ -44,7 +44,7 @@ export default {
           800: "#ff8f00",
           900: "#ff6f00",
         },
-        "light-green": {
+        "lightgreen": {
           50: "#f1f8e9",
           100: "#dcedc8",
           200: "#c5e1a5",
