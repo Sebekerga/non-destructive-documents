@@ -1,7 +1,7 @@
 import puppeteer from "puppeteer";
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { parse } from "deno/std/node/url.ts";
-import { join } from "deno/std/path/posix.ts";
+import { join, normalize } from "deno/std/path/posix.ts";
 import { encode } from "deno/std/encoding/base64.ts";
 
 import { DocumentDescription } from "../../../utils/documents.ts";
@@ -12,8 +12,10 @@ import DocumentPreviewContainer from "../../../components/DocumentPreviewContain
 
 export const handler: Handlers = {
   GET: async (req, ctx) => {
-    const document_name = ctx.params.document;
-    const document_description = manifest.find((document) => document.document_id === document_name);
+    const document_name = `/${ctx.params.document}`;
+    const document_description = manifest.find(
+      (document) => normalize(document.path) === normalize(document_name),
+    )?.document;
 
     // returning page to user
     if (!document_description) {
@@ -86,7 +88,13 @@ const DocumentPreview = (props: PageProps<DocumentPreviewProps>) => {
             pdf={props.data.pdf}
           />
           <DocumentPreviewContainer {...document_data}>
-            {props.data.document_description.pages}
+            {props.data.document_description.pages.map((p) => (
+              <div
+                class={`w-[${props.data.document_description.page_size.width}] h-[${props.data.document_description.page_size.height}]`}
+              >
+                {p}
+              </div>
+            ))}
           </DocumentPreviewContainer>
         </body>
       </html>

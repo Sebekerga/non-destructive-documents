@@ -18,7 +18,7 @@ const DenoResumePage = (props: DenoResumePageProps) => {
   main_color = props.color || main_color;
   return (
     <div
-      class={`flex h-[297mm] w-[210mm] flex-col bg-gradient-to-br from-gray-100 to-${main_color}-100 font-sans`}
+      class={`flex w-full h-full flex-col bg-gradient-to-br from-gray-100 to-${main_color}-100 font-sans`}
     >
       {/* Header */}
       <div
@@ -124,6 +124,10 @@ const document_description: DocumentDescription = {
     <DenoResumePage color="yellow" />, // deno resume for sharing online
     <DenoResumePage color="gray" />, // deno resume for printing
   ],
+  page_size: {
+    height: "297mm",
+    width: "210mm",
+  },
 };
 
 export default document_description;

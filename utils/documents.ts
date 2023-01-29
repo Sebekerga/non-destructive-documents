@@ -1,25 +1,33 @@
 import { encode } from "deno/std/encoding/base64.ts";
-
 import { join, toFileUrl } from "deno/std/path/mod.ts";
 import { walk } from "deno/std/fs/walk.ts";
-import { dirname, fromFileUrl } from "deno/std/path/posix.ts";
+import { dirname, format, fromFileUrl, parse } from "deno/std/path/posix.ts";
 
 interface DocumentDescription {
   label: string;
   document_id: string;
   filename: string;
   pages: Array<preact.JSX.Element>;
+  page_size: {
+    width: string;
+    height: string;
+  };
+}
+
+interface DocumentFile {
+  path: string;
+  document: DocumentDescription;
 }
 
 const fileToBase64 = async (file_path: string) => {
-  const file = await Deno.readTextFile(file_path);
+  const file = await Deno.readFile(file_path);
   const encoded = encode(file);
 
   return encoded;
 };
 
 const collectDocuments = async (directory: string): Promise<string[]> => {
-  const documents = [];
+  const unfiltered_documents = [];
 
   try {
     const routesUrl = toFileUrl(directory);
@@ -38,7 +46,7 @@ const collectDocuments = async (directory: string): Promise<string[]> => {
         const file = toFileUrl(entry.path).href.substring(
           routesUrl.href.length,
         );
-        documents.push(file);
+        unfiltered_documents.push(file);
       }
     }
   } catch (err) {
@@ -48,8 +56,12 @@ const collectDocuments = async (directory: string): Promise<string[]> => {
       throw err;
     }
   }
-  documents.sort();
+  unfiltered_documents.sort();
 
+  const documents = unfiltered_documents.filter((file) => {
+    const path_elements = file.split("/").filter((e) => e);
+    return path_elements[0] !== "components";
+  });
   return documents;
 };
 
@@ -63,13 +75,25 @@ const generateDocumentsManifest = async (base: string, directory: string) => {
 // This file SHOULD be checked into source version control.
 // This file is automatically updated during development when running \`dev.ts\`.
 
+import { DocumentFile } from "./utils/documents.ts";
+
 ${
     manifest_data.map((file, index) => `import $${index} from "${directory}${file}";`)
       .join("\n")
   }
 
-const manifest = [
-${Array.from({ length: manifest_data.length }, (v, i) => ` $${i},`).join("\n")}
+const manifest: DocumentFile[] = [
+${
+    manifest_data.map((file, index) => {
+      const parsed_path = parse(file);
+      const resulting_path = join(parsed_path.dir, parsed_path.name);
+      const resulting_line = `{
+  path: "${resulting_path}",
+  document: $${index},
+      },`;
+      return resulting_line;
+    }).join("\n")
+  }
 ];
 
 export default manifest;
@@ -102,5 +126,5 @@ export default manifest;
   );
 };
 
-export type { DocumentDescription };
+export type { DocumentDescription, DocumentFile };
 export { fileToBase64, generateDocumentsManifest };
