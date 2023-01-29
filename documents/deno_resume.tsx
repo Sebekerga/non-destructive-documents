@@ -118,7 +118,6 @@ const DenoResumePage = (props: DenoResumePageProps) => {
 
 const document_description: DocumentDescription = {
   label: "Resume",
-  document_id: "resume",
   filename: "deno_resume",
   pages: [
     <DenoResumePage color="yellow" />, // deno resume for sharing online

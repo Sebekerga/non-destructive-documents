@@ -1,11 +1,10 @@
 import { encode } from "deno/std/encoding/base64.ts";
 import { join, toFileUrl } from "deno/std/path/mod.ts";
 import { walk } from "deno/std/fs/walk.ts";
-import { dirname, format, fromFileUrl, parse } from "deno/std/path/posix.ts";
+import { dirname, fromFileUrl, parse } from "deno/std/path/posix.ts";
 
 interface DocumentDescription {
   label: string;
-  document_id: string;
   filename: string;
   pages: Array<preact.JSX.Element>;
   page_size: {
