@@ -40,8 +40,6 @@ const DocumentPreviewHandler = (props: DocumentPreviewHandlerProps) => {
   }, []);
 
   const saveAsPDF = () => {
-    console.log("saving pdf", props.pdf);
-
     props.pdf &&
       downloadjs(`data:application/pdf;base64,${props.pdf}`, `${props.filename}.pdf`, "application/pdf");
   };
